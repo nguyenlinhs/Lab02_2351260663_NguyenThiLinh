@@ -84,7 +84,12 @@ Do tính chất biến thiên theo thời gian của cơ quan phát âm, tín hi
 3. **Root Mean Square (RMS)**:
    $$\mathrm{RMS}_r = \sqrt{\frac{1}{L} \sum_{n=0}^{L-1} (x_r[n])^2}$$
 4. **Zero-Crossing Rate (ZCR)** (tính trên khung chữ nhật không cửa sổ hóa):
-   $$Z_r = \frac{1}{2L} \sum_{m=1}^{L-1} |\operatorname{sgn}(x[m]) - \operatorname{sgn}(x[m-1])|$$
+   $$
+Z_r = \frac{1}{2L} \sum_{m=1}^{L-1}
+\left|
+\mathrm{sgn}(x[m]) - \mathrm{sgn}(x[m-1])
+\right|
+$$
    trong đó $\operatorname{sgn}(x) = 1$ khi $x \ge 0$ và $-1$ khi $x < 0$.
 
 ### 4.3. Pipeline trích xuất đặc trưng MFCC
