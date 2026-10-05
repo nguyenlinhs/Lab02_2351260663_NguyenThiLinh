@@ -2,7 +2,7 @@
 ## ĐẶC TRƯNG TIẾNG NÓI VÀ NHẬN DẠNG TỪ ĐƠN BẰNG DTW
 **Học phần:** CSE457 – Xử lý âm thanh và tiếng nói  
 **Bộ môn:** Trí tuệ Nhân tạo – Khoa Công nghệ Thông tin – Trường Đại học Thủy Lợi  
-**Sinh viên:** Nguyễn Thị Linh &nbsp;|&nbsp; **MSSV:** 2351260663 &nbsp;|&nbsp; **Lớp:** 65TTNT  
+**Sinh viên:** Nguyễn Thị Linh  |  **MSSV:** 2351260663  |  **Lớp:** 65TTNT  
 
 ---
 
@@ -13,7 +13,7 @@ Bài thực hành số 2 hiện thực hóa các khái niệm nền tảng trong
 ### Các mục tiêu cốt lõi:
 1. **Phân tích tín hiệu thời gian ngắn (Short-time analysis):**
    - Phân đoạn tín hiệu thành các frame 25 ms, bước nhảy hop 10 ms, nhân cửa sổ Hamming.
-   - Tính toán các đại lượng mức biên độ cơ bản: Short-time Energy ($E_r$), Log-energy ($E_r(\text{dB})$), RMS và Zero-Crossing Rate (ZCR).
+   - Tính toán các đại lượng mức biên độ cơ bản: Short-time Energy ($E_r$), Log-energy ($E_r(\mathrm{dB})$), RMS và Zero-Crossing Rate (ZCR).
    - Phân biệt bản chất âm học giữa 3 trạng thái: **Silence (Khoảng lặng)**, **Voiced (Âm hữu thanh)** và **Unvoiced (Âm vô thanh)**.
 2. **Tách biên tiếng nói (Endpoint Detection):**
    - Tự động xác định điểm bắt đầu và kết thúc từ nói dựa trên Log-Energy và ZCR.
@@ -24,7 +24,7 @@ Bài thực hành số 2 hiện thực hóa các khái niệm nền tảng trong
    - Tính ma trận khoảng cách cục bộ Euclidean (Local Distance Matrix).
    - Giải bài toán quy hoạch động (Dynamic Programming) theo quy tắc 3 bước cục bộ (ngang, dọc, chéo).
    - Truy vết đường căn chỉnh tối ưu (Backtracking Optimal Warping Path).
-   - Chuẩn hóa chi phí theo độ dài đường đi ($\text{DTW\_norm} = D[N, M] / |P|$).
+   - Chuẩn hóa chi phí theo độ dài đường đi ($\mathrm{DTW}_{\mathrm{norm}} = D[N, M] / |P|$).
 5. **Nhận dạng theo Nearest-Template & Đánh giá thực nghiệm:**
    - Xây dựng bộ nhận dạng 5 từ tiếng Việt cách rời (`không`, `một`, `hai`, `ba`, `bốn`).
    - Đánh giá độ chính xác (Accuracy), ma trận nhầm lẫn (Confusion Matrix).
@@ -57,7 +57,7 @@ pip install numpy scipy matplotlib librosa soundfile scikit-learn pandas seaborn
 ```
 
 ### 3.2. Chạy và kiểm tra Jupyter Notebook
-1. Mở tệp [Lab2.ipynb](file:///d:/xuliamthanh/TH2/Lab2.ipynb) trong Visual Studio Code hoặc khởi chạy Jupyter Notebook:
+1. Mở tệp [Lab2.ipynb](Lab2.ipynb) trong Visual Studio Code hoặc khởi chạy Jupyter Notebook:
    ```bash
    jupyter notebook Lab2.ipynb
    ```
@@ -80,12 +80,12 @@ Do tính chất biến thiên theo thời gian của cơ quan phát âm, tín hi
 1. **Short-time Energy**:
    $$E_r = \sum_{n=0}^{L-1} (x_r[n])^2$$
 2. **Log-Energy (dB)**:
-   $$E_r(\text{dB}) = 10 \log_{10}(E_r + \varepsilon), \quad \varepsilon = 10^{-12}$$
+   $$E_r(\mathrm{dB}) = 10 \log_{10}(E_r + \varepsilon), \quad \varepsilon = 10^{-12}$$
 3. **Root Mean Square (RMS)**:
-   $$\text{RMS}_r = \sqrt{\frac{1}{L} \sum_{n=0}^{L-1} (x_r[n])^2}$$
+   $$\mathrm{RMS}_r = \sqrt{\frac{1}{L} \sum_{n=0}^{L-1} (x_r[n])^2}$$
 4. **Zero-Crossing Rate (ZCR)** (tính trên khung chữ nhật không cửa sổ hóa):
-   $$Z_r = \frac{1}{2L} \sum_{m=1}^{L-1} |\text{sgn}(x[m]) - \text{sgn}(x[m-1])|$$
-   trong đó $\text{sgn}(x) = 1$ khi $x \ge 0$ và $-1$ khi $x < 0$.
+   $$Z_r = \frac{1}{2L} \sum_{m=1}^{L-1} |\operatorname{sgn}(x[m]) - \operatorname{sgn}(x[m-1])|$$
+   trong đó $\operatorname{sgn}(x) = 1$ khi $x \ge 0$ và $-1$ khi $x < 0$.
 
 ### 4.3. Pipeline trích xuất đặc trưng MFCC
 1. **Tiền nhấn (Pre-emphasis)**: Lọc bù phổ tần số cao (khắc phục suy giảm $-6\text{ dB/octave}$):
@@ -107,7 +107,7 @@ Cho hai chuỗi vector MFCC: $X = (x_1, \dots, x_N) \in \mathbb{R}^{N \times 13}
 - **Khoảng cách cục bộ (Local Euclidean Distance)**:
   $$C[i, j] = \|x_i - y_j\|_2 = \sqrt{\sum_{q=0}^{12} (x_i[q] - y_j[q])^2}$$
 - **Quy hoạch động 3 bước cục bộ**:
-  $$D[i, j] = C[i, j] + \min \left\lbrace D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\rbrace$$
+  $$D[i, j] = C[i, j] + \min \left\{ D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\}$$
   với điều kiện biên: $D[0, 0] = 0$; $D[i, 0] = \infty$; $D[0, j] = \infty$.
 - **Độ dài đường đi và Chuẩn hóa**:
   $$\text{DTW}_{\text{norm}}(X, Y) = \frac{D[N, M]}{|P|}$$
@@ -122,8 +122,8 @@ Cho hai chuỗi vector MFCC: $X = (x_1, \dots, x_N) \in \mathbb{R}^{N \times 13}
 | **Energy + ZCR** | Đồ thị Waveform, Log-Energy, ZCR theo thời gian (`fig2`) | - **Silence**: Energy $< -45\text{ dB}$, ZCR ở mức nhiễu ngẫu nhiên.<br>- **Voiced** (nguyên âm `/o/`, `/a/`): Energy cực đại ($-10$ đến $0\text{ dB}$), ZCR thấp ($0.02 - 0.08$) do dây thanh rung theo $F_0$.<br>- **Unvoiced** (phụ âm xát `/kh/`, âm tắc `/t/`): Energy thấp/trung bình, ZCR vọt cao ($0.25 - 0.45$) do đổi dấu nhanh qua trục 0. |
 | **Endpoint Detection** | Bảng thời lượng trước/sau trim (tổng kết trong notebook `Lab2.ipynb`) | - Loại bỏ trung bình **$60\% - 73\%$** thời lượng khoảng lặng thừa.<br>- Nhờ giữ **margin 50 ms**, toàn bộ phụ âm xát đầu (`/kh/`) và âm tắc cuối (`/t/`) **được bảo toàn trọn vẹn, không bị cắt cụt**. |
 | **MFCC** | Heatmap ma trận 13 hệ số của từ 'không' và 'một' (`fig5`) | Cấu trúc thời gian - tần số khác biệt rõ: từ 'không' có vùng khuếch tán năng lượng của `/kh/` rồi hội tụ ở `/o/` và `/ng/`, trong khi 'một' mở đầu bằng dải formant thấp của âm môi `/m/` và kết thúc bằng pha nén chặn hơi của `/t/`. |
-| **DTW cùng từ** | $\text{DTW\_norm} \approx 10.6401$, optimal path bám sát đường chéo (`fig6`) | Đường căn chỉnh bám rất sát đường chéo chính $1:1$. Độ lệch nhỏ chỉ phản ánh sự co giãn tự nhiên trong nhịp phát âm giữa các lần nói. |
-| **DTW khác từ** | $\text{DTW\_norm} \approx 31.0362$ (tăng gần gấp 3 lần) (`fig7`) | Chi phí tăng vọt do cấu trúc âm học không khớp. Đường warping path bị bẻ cong lệch xa đường chéo để gượng ép ghép các frame khác bản chất. |
+| **DTW cùng từ** | $\mathrm{DTW}_{\mathrm{norm}} \approx 10.6401$, optimal path bám sát đường chéo (`fig6`) | Đường căn chỉnh bám rất sát đường chéo chính $1:1$. Độ lệch nhỏ chỉ phản ánh sự co giãn tự nhiên trong nhịp phát âm giữa các lần nói. |
+| **DTW khác từ** | $\mathrm{DTW}_{\mathrm{norm}} \approx 31.0362$ (tăng gần gấp 3 lần) (`fig7`) | Chi phí tăng vọt do cấu trúc âm học không khớp. Đường warping path bị bẻ cong lệch xa đường chéo để gượng ép ghép các frame khác bản chất. |
 | **Recognizer** | $\text{Accuracy} = 100.0\%$, Confusion Matrix hoàn hảo (`fig8`) | Cặp từ có khoảng cách DTW gần nhau nhất là **'một' và 'bốn'** ($D \approx 24.55 - 25.75$) do cùng bắt đầu bằng phụ âm môi (`/m/`, `/b/`) và cấu trúc nguyên âm hẹp tương đồng. |
 
 ---
@@ -219,7 +219,7 @@ Khi điền ma trận quy hoạch động $D[i, j]$, 3 bước chuyển cục b�
   $$D[N, M] = \sum_{k=1}^{|P|} C[i_k, j_k]$$
 - Do đó, một từ phát âm kéo dài (nhiều frame, ví dụ $|P| = 80$) sẽ có tổng chi phí tích lũy tự nhiên lớn hơn rất nhiều so với một từ phát âm ngắn (ít frame, ví dụ $|P| = 35$), ngay cả khi hai phát âm dài đó là cùng một từ.
 - Nếu không chuẩn hóa, hệ thống sẽ luôn có xu hướng thiên vị dự đoán vào các từ ngắn vì tổng chi phí của chúng nhỏ hơn.
-- Phép chia $\text{DTW\_norm} = D[N, M] / |P|$ đưa chi phí về **khoảng cách sai lệch trung bình trên mỗi cặp frame**, đảm bảo tính công bằng tuyệt đối giữa các mẫu phát âm có độ dài khác nhau.
+- Phép chia $\mathrm{DTW}_{\mathrm{norm}} = D[N, M] / |P|$ đưa chi phí về **khoảng cách sai lệch trung bình trên mỗi cặp frame**, đảm bảo tính công bằng tuyệt đối giữa các mẫu phát âm có độ dài khác nhau.
 
 ---
 
