@@ -73,44 +73,100 @@ Do tính chất biến thiên theo thời gian của cơ quan phát âm, tín hi
 - **Bước dịch khung (Hop size)**: $R = \text{round}(F_s \cdot T_h) = 16000 \cdot 0.010 = 160\text{ mẫu}$.
 - **Độ chồng lấn (Overlap)**: $L - R = 240\text{ mẫu}$ (tương đương $15\text{ ms}$).
 - **Cửa sổ Hamming**:
-  $$w[n] = 0.54 - 0.46 \cos\left( \frac{2\pi n}{L - 1} \right), \quad 0 \le n \le L - 1$$
+  
+$$
+w[n] = 0.54 - 0.46 \cos\left( \frac{2\pi n}{L - 1} \right), \quad 0 \le n \le L - 1
+$$
+
   Khung tín hiệu sau cửa sổ hóa: $x_r[n] = x[rR + n] \cdot w[n]$.
 
 ### 4.2. Các đặc trưng miền thời gian
 1. **Short-time Energy**:
-   $$E_r = \sum_{n=0}^{L-1} (x_r[n])^2$$
+   
+$$
+E_r = \sum_{n=0}^{L-1} (x_r[n])^2
+$$
+
 2. **Log-Energy (dB)**:
-   $$E_r(\mathrm{dB}) = 10 \log_{10}(E_r + \varepsilon), \quad \varepsilon = 10^{-12}$$
+   
+$$
+E_r(\mathrm{dB}) = 10 \log_{10}(E_r + \varepsilon), \quad \varepsilon = 10^{-12}
+$$
+
 3. **Root Mean Square (RMS)**:
-   $$\mathrm{RMS}_r = \sqrt{\frac{1}{L} \sum_{n=0}^{L-1} (x_r[n])^2}$$
+   
+$$
+RMS_r = \sqrt{\frac{1}{L} \sum_{n=0}^{L-1} (x_r[n])^2}
+$$
+
 4. **Zero-Crossing Rate (ZCR)** (tính trên khung chữ nhật không cửa sổ hóa):
-   $$Z_r = \frac{1}{2L} \sum_{m=1}^{L-1} |\operatorname{sgn}(x[m]) - \operatorname{sgn}(x[m-1])|$$
-   trong đó $\operatorname{sgn}(x) = 1$ khi $x \ge 0$ và $-1$ khi $x < 0$.
+   
+$$
+Z_r = \frac{1}{2L} \sum_{m=1}^{L-1} |sgn(x[m]) - sgn(x[m-1])|
+$$
+
+   trong đó $sgn(x) = 1$ khi $x \ge 0$ và $-1$ khi $x < 0$.
 
 ### 4.3. Pipeline trích xuất đặc trưng MFCC
 1. **Tiền nhấn (Pre-emphasis)**: Lọc bù phổ tần số cao (khắc phục suy giảm $-6\text{ dB/octave}$):
-   $$y[n] = x[n] - \alpha x[n-1], \quad \alpha = 0.97$$
+   
+$$
+y[n] = x[n] - \alpha x[n-1], \quad \alpha = 0.97
+$$
+
 2. **Phổ công suất (Power Spectrum)**:
-   $$X_r[k] = \sum_{n=0}^{L-1} x_r[n] e^{-j 2\pi k n / N_{\text{FFT}}}, \quad P_r[k] = \frac{|X_r[k]|^2}{N_{\text{FFT}}}, \quad N_{\text{FFT}} = 512$$
+   
+$$
+X_r[k] = \sum_{n=0}^{L-1} x_r[n] e^{-j 2\pi k n / N_{\text{FFT}}}, \quad P_r[k] = \frac{|X_r[k]|^2}{N_{\text{FFT}}}, \quad N_{\text{FFT}} = 512
+$$
+
 3. **Thang tần số Mel**: Mô phỏng cảm nhận phi tuyến của tai người:
-   $$B(f) = 1125 \ln\left(1 + \frac{f}{700}\right)$$
+   
+$$
+B(f) = 1125 \ln\left(1 + \frac{f}{700}\right)
+$$
+
    Với $M = 24$ bộ lọc hình tam giác $H_m[k]$.
 4. **Năng lượng Log trên bộ lọc Mel**:
-   $$S_r[m] = \ln\left( \sum_{k} P_r[k] H_m[k] + \varepsilon \right)$$
+   
+$$
+S_r[m] = \ln\left( \sum_{k} P_r[k] H_m[k] + \varepsilon \right)
+$$
+
 5. **Biến đổi Cosine rời rạc (DCT-II)**:
-   $$c_r[n] = \sum_{m=0}^{M-1} S_r[m] \cos\left( \frac{\pi n (m + 0.5)}{M} \right), \quad n = 0, 1, \dots, 12$$
+   
+$$
+c_r[n] = \sum_{m=0}^{M-1} S_r[m] \cos\left( \frac{\pi n (m + 0.5)}{M} \right), \quad n = 0, 1, \dots, 12
+$$
+
 6. **Cepstral Mean Normalization (CMN)**: Chuẩn hóa triệt tiêu đặc tính kênh truyền:
-   $$c_r \leftarrow c_r - \mu_c$$
+   
+$$
+c_r \leftarrow c_r - \mu_c
+$$
+
 
 ### 4.4. Thuật toán Dynamic Time Warping (DTW)
 Cho hai chuỗi vector MFCC: $X = (x_1, \dots, x_N) \in \mathbb{R}^{N \times 13}$ và $Y = (y_1, \dots, y_M) \in \mathbb{R}^{M \times 13}$.
 - **Khoảng cách cục bộ (Local Euclidean Distance)**:
-  $$C[i, j] = \|x_i - y_j\|_2 = \sqrt{\sum_{q=0}^{12} (x_i[q] - y_j[q])^2}$$
+  
+$$
+C[i, j] = \|x_i - y_j\|_2 = \sqrt{\sum_{q=0}^{12} (x_i[q] - y_j[q])^2}
+$$
+
 - **Quy hoạch động 3 bước cục bộ**:
-  $$D[i, j] = C[i, j] + \min \left\{ D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\}$$
+  
+$$
+D[i, j] = C[i, j] + \min \left\{ D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\}
+$$
+
   với điều kiện biên: $D[0, 0] = 0$; $D[i, 0] = \infty$; $D[0, j] = \infty$.
 - **Độ dài đường đi và Chuẩn hóa**:
-  $$\text{DTW}_{\text{norm}}(X, Y) = \frac{D[N, M]}{|P|}$$
+  
+$$
+\text{DTW}_{\text{norm}}(X, Y) = \frac{D[N, M]}{|P|}
+$$
+
   với $|P|$ là tổng số điểm trên đường căn chỉnh tối ưu tìm được qua bước Backtracking.
 
 ---
@@ -216,7 +272,11 @@ Khi điền ma trận quy hoạch động $D[i, j]$, 3 bước chuyển cục b�
 ### Câu 6: Tại sao phải chuẩn hóa DTW cost theo path length khi so sánh các utterance có thời lượng khác nhau?
 **Trả lời:**
 - Giá trị tích lũy cuối cùng $D[N, M]$ là tổng chi phí tích lũy dọc theo toàn bộ $|P|$ bước đi của đường căn chỉnh:
-  $$D[N, M] = \sum_{k=1}^{|P|} C[i_k, j_k]$$
+  
+$$
+D[N, M] = \sum_{k=1}^{|P|} C[i_k, j_k]
+$$
+
 - Do đó, một từ phát âm kéo dài (nhiều frame, ví dụ $|P| = 80$) sẽ có tổng chi phí tích lũy tự nhiên lớn hơn rất nhiều so với một từ phát âm ngắn (ít frame, ví dụ $|P| = 35$), ngay cả khi hai phát âm dài đó là cùng một từ.
 - Nếu không chuẩn hóa, hệ thống sẽ luôn có xu hướng thiên vị dự đoán vào các từ ngắn vì tổng chi phí của chúng nhỏ hơn.
 - Phép chia $\mathrm{DTW}_{\mathrm{norm}} = D[N, M] / |P|$ đưa chi phí về **khoảng cách sai lệch trung bình trên mỗi cặp frame**, đảm bảo tính công bằng tuyệt đối giữa các mẫu phát âm có độ dài khác nhau.
