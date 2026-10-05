@@ -107,10 +107,10 @@ Cho hai chuỗi vector MFCC: $X = (x_1, \dots, x_N) \in \mathbb{R}^{N \times 13}
 - **Khoảng cách cục bộ (Local Euclidean Distance)**:
   $$C[i, j] = \|x_i - y_j\|_2 = \sqrt{\sum_{q=0}^{12} (x_i[q] - y_j[q])^2}$$
 - **Quy hoạch động 3 bước cục bộ**:
-  $$D[i, j] = C[i, j] + \min \left\{ D[i-1, j], \; D[i, j-1], \; D[i-1, j-1] \right\}$$
+  $$D[i, j] = C[i, j] + \min \left\lbrace D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\rbrace$$
   với điều kiện biên: $D[0, 0] = 0$; $D[i, 0] = \infty$; $D[0, j] = \infty$.
 - **Độ dài đường đi và Chuẩn hóa**:
-  $$\text{DTW\_norm}(X, Y) = \frac{D[N, M]}{|P|}$$
+  $$\text{DTW}_{\text{norm}}(X, Y) = \frac{D[N, M]}{|P|}$$
   với $|P|$ là tổng số điểm trên đường căn chỉnh tối ưu tìm được qua bước Backtracking.
 
 ---
