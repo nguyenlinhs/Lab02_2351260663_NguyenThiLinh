@@ -157,7 +157,7 @@ $$
 - **Quy hoạch động 3 bước cục bộ**:
   
 $$
-D[i, j] = C[i, j] + \min \left\{ D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\}
+D[i, j] = C[i, j] + \min \left\lbrace D[i-1, j],\ D[i, j-1],\ D[i-1, j-1] \right\rbrace
 $$
 
   với điều kiện biên: $D[0, 0] = 0$; $D[i, 0] = \infty$; $D[0, j] = \infty$.
