@@ -1,0 +1,11 @@
+﻿file_name,true_label,true_label_vi,pred_label,pred_label_vi,top1_label,top1_score,top2_label,top2_score,correct
+khong_04.wav,khong,không,khong,không,không,10.64,một,31.04,True
+khong_05.wav,khong,không,khong,không,không,9.33,một,27.59,True
+mot_04.wav,mot,một,mot,một,một,8.2,bốn,25.75,True
+mot_05.wav,mot,một,mot,một,một,11.32,bốn,24.55,True
+hai_04.wav,hai,hai,hai,hai,hai,7.46,không,33.72,True
+hai_05.wav,hai,hai,hai,hai,hai,9.06,không,34.56,True
+ba_04.wav,ba,ba,ba,ba,ba,9.25,hai,36.62,True
+ba_05.wav,ba,ba,ba,ba,ba,9.45,hai,37.25,True
+bon_04.wav,bon,bốn,bon,bốn,bốn,10.25,một,24.59,True
+bon_05.wav,bon,bốn,bon,bốn,bốn,10.29,một,24.94,True
